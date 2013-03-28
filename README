@@ -1,0 +1,26 @@
+SYNCRONIZE TAXONOMY FIELDS
+==========================
+Developed by Quiron
+Sponsored by Projecte Ictineo (www.projecteictineo.com)
+GPLv3
+
+USE
+===
+This module is diseigned to solve the incompatibility with taxonomy select widgets and the condigional fiels API in Drupal 7.
+It can be used to get a advanced selection widget for a taxonomy and get it working with as dependee field in conditionals
+
+INSTALL
+=======
+Download it and uncompress into sites/all/modules/
+Enable it in the modules page
+
+Define your entity type fields (p.e. content type). Set 2 term reference fields referenced to the same taxonomy that you want to work with.
+Set one of them as simple checkbox widget with unlimited options, this will be the slave and the dependee in conditions
+Set the other field with a nice widget such as Term Reference Tree;  not tested yet for hierarchical select
+
+Go to its config page in: /admin/config/content/sync_taxo_fields and set the field name for the master and slave
+Define your conditions with conditional fields module, use the slave field to set up conditions.
+
+enjoy!
+
+

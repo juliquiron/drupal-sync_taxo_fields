@@ -1,0 +1,73 @@
+<?php
+/**
+ * Developedy by Quiron for Projecte Ictineo
+ * Copyright Projecte Ictineo
+ * Licence GPLv3
+ */
+
+/**
+ * @file
+ * Module for the Entityform Entity - a starting point to create your own Entity
+ * and associated administration interface
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function sync_taxo_fields_menu() {
+  $items["admin/config/content/sync_taxo_fields"] = array(
+      'title' => 'Syncronize taxonomy fields configuration',
+      'description' => '',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('sync_taxo_fields_manager_admin'),
+      'access arguments' => array('sync taxo fields admin'),
+      'type' => MENU_NORMAL_ITEM,
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function sync_taxo_fields_permission() {
+  $permissions = array(
+      'sync taxo fields admin' => array(
+          'title' => t('Sync taxonomy fields admin access'),
+      ),
+  );
+  return $permissions;
+}
+
+/** 
+ * Callback functions for menu
+ */
+function sync_taxo_fields_manager_admin($form, &$form_state) {
+  $form['sync_taxo_fields_master'] = array (
+        '#title' => t('Master element of syncronitzation'),
+        '#type' => 'textfield',
+        '#description' => t('Set a master element for the taxonomy syncronitzation of fields.'),
+        '#default_value' => variable_get('sync_taxo_fields_master', ''),
+      );
+   $form['sync_taxo_fields_slave'] = array (
+        '#title' => t('Slave element of syncronitzation'),
+        '#type' => 'textfield',
+        '#description' => t('Set a slave element for the taxonomy syncronitzation of fields.'),
+        '#default_value' => variable_get('sync_taxo_fields_slave', ''),
+      );
+  return system_settings_form($form);
+}
+
+/**
+ * Alter node view
+ * Implements hook_node_view_alter()
+ *
+ */
+function sync_taxo_fields_page_alter(&$page) {
+  $master = variable_get('sync_taxo_fields_master', ''); 
+  $slave = variable_get('sync_taxo_fields_slave', ''); 
+  if(isset($page['content']['system_main'][$master]) && isset($page['content']['system_main'][$slave])) {
+    $page['content']['system_main']['#attached']['js'][] = drupal_get_path('module','sync_taxo_fields') . '/js/sync.js';
+    $page['content']['system_main']['#attached']['css'][] = drupal_get_path('module','sync_taxo_fields') . '/css/sync.css';
+    drupal_add_js(array('sync_taxo_fields' => array('master' => $master, 'slave' => $slave)), 'setting');
+  }
+}
