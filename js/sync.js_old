@@ -1,0 +1,34 @@
+
+  Drupal.behaviors.exampleModule = {
+    attach: function (context, settings) {
+      var slave = settings.sync_taxo_fields.slave.replace(/_/g,'-');
+      var master = settings.sync_taxo_fields.master.replace(/_/g,'-');
+      jQuery('#edit-' + slave).hide(); 
+      jQuery('#edit-' + master + ' input').each(function (context) {
+        jQuery(this).change(function (context) {
+          alert('hi');
+          jQuery('#edit-' + slave + ' input[value=' + jQuery(this).val() + ']').click();
+          jQuery('#edit-' + slave + ' input[value=' + jQuery(this).val() + ']').change();
+        });
+      });
+      jQuery('.hierarchical-select .selects select').each(function (context) {
+          jQuery(this).change(function (context) { 
+
+            // Uncheck all options when a level is changed
+            jQuery('.hierarchical-select .selects select').each(function (context) {
+              var opts = jQuery(this).find('option');
+              for(var i=0;i<opts.length;i++) {
+                jQuery('#edit-' + slave + ' input[value=' + jQuery(opts[i]).val() + ']').attr('checked',false);
+              }
+            });
+
+
+            // Set checked value
+            var curr = jQuery(this).find(':selected').val();
+            jQuery('#edit-' + slave + ' input[value=' + curr + ']').click();
+            jQuery('#edit-' + slave + ' input[value=' + curr + ']').change();
+            });
+          });
+
+    }
+  };
